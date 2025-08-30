@@ -1,0 +1,27 @@
+{
+  "title": "Viewbot Guard",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Requests per 5m (sum)",
+      "targets": [{
+        "format": "table",
+        "datasource": {"type":"grafana-clickhouse-datasource","uid":"clickhouse"},
+        "query": "SELECT window_start as t, sum(reqs) AS reqs FROM viewbot.mv_viewer_5m GROUP BY t ORDER BY t"
+      }],
+      "options": {"legend": {"displayMode": "table"}}
+    },
+    {
+      "type": "table",
+      "title": "Recent decisions",
+      "targets": [{
+        "format": "table",
+        "datasource": {"type":"grafana-clickhouse-datasource","uid":"clickhouse"},
+        "query": "SELECT ts, channel_id, session_id, score, action FROM viewbot.decisions ORDER BY ts DESC LIMIT 50"
+      }]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}
