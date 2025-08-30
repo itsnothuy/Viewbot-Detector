@@ -494,3 +494,73 @@ This system analysis provides the foundation for detailed software design. Key o
 5. ✅ **Security Framework**: Comprehensive threat mitigation strategy
 
 **Ready to proceed to**: Detailed Software Design phase
+```
+graph TB
+    subgraph "External Data Sources"
+        CDN[CDN Logs<br/>CloudFront/Fastly]
+        PLAYER[HLS Player<br/>hls.js + CMCD]
+        CHAT[Chat Events<br/>IRC/EventSub]
+        WAF[Edge Signals<br/>JA3/JA4/Challenges]
+    end
+
+    subgraph "Event Streaming Layer"
+        KAFKA[Redpanda<br/>Kafka API]
+    end
+
+    subgraph "Real-time Processing"
+        FLINK[Apache Flink<br/>Stream Processing]
+        FEATURES[Feature Store<br/>Session State]
+        SCORER[Risk Scorer<br/>ML + Rules]
+    end
+
+    subgraph "Storage Layer"
+        CLICKHOUSE[ClickHouse<br/>Time-Series OLAP]
+        REDIS[Redis<br/>Real-time Cache]
+    end
+
+    subgraph "Enforcement & Actions"
+        ENFORCEMENT[Enforcement Engine]
+        TURNSTILE[Cloudflare Turnstile<br/>Bot Challenges]
+        ACTIONS[Actions<br/>Block/Challenge/Suppress]
+    end
+
+    subgraph "Monitoring & Dashboards"
+        GRAFANA[Grafana Dashboards<br/>Real-time Metrics]
+        ALERTS[Alert Manager<br/>Notifications]
+        API[REST APIs<br/>External Integration]
+    end
+
+    CDN --> KAFKA
+    PLAYER --> KAFKA
+    CHAT --> KAFKA
+    WAF --> KAFKA
+
+    KAFKA --> FLINK
+    FLINK --> FEATURES
+    FEATURES --> SCORER
+    SCORER --> CLICKHOUSE
+    SCORER --> ENFORCEMENT
+
+    ENFORCEMENT --> TURNSTILE
+    ENFORCEMENT --> ACTIONS
+    ENFORCEMENT --> REDIS
+
+    CLICKHOUSE --> GRAFANA
+    REDIS --> API
+    GRAFANA --> ALERTS
+
+    ACTIONS --> CDN
+    TURNSTILE --> PLAYER
+
+    classDef external fill:#e1f5fe
+    classDef processing fill:#f3e5f5
+    classDef storage fill:#e8f5e8
+    classDef action fill:#fff3e0
+    classDef monitoring fill:#fce4ec
+
+    class CDN,PLAYER,CHAT,WAF external
+    class KAFKA,FLINK,FEATURES,SCORER processing
+    class CLICKHOUSE,REDIS storage
+    class ENFORCEMENT,TURNSTILE,ACTIONS action
+    class GRAFANA,ALERTS,API monitoring
+```
