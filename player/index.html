@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Viewbot Guard Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>body{font-family:system-ui,Arial;margin:2rem} video{max-width:100%;}</style>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <h1>Viewbot Guard — HLS Player (demo)</h1>
+  <p>Plays a demo HLS stream, appends <code>CMCD</code> query args to each request, and logs lightweight analytics.</p>
+  <video id="video" controls muted playsinline></video>
+  <div>
+    <label>HLS URL: <input id="src" size="80" value="/sample/stream.m3u8"/></label>
+    <button id="play">Play</button>
+  </div>
+  <pre id="log"></pre>
+</body>
+</html>
